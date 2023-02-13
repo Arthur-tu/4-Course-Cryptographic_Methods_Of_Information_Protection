@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="540.0" style="-fx-background-color: #fafafa;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller.AboutController">
+
+    <AnchorPane prefHeight="360.0" prefWidth="540.0" style="-fx-background-color: #fafafa;">
+        <children>
+            <AnchorPane layoutX="-6.0" layoutY="70.0" prefHeight="287.0" prefWidth="547.0">
+                <children>
+                    <Label layoutX="143.0" layoutY="14.0" prefHeight="43.0" prefWidth="261.0" text="Вариант №41.&#10;" wrapText="true">
+                        <font>
+                            <Font name="Verdana" size="34.0" />
+                        </font>
+                    </Label>
+                </children></AnchorPane>
+            <Label layoutX="51.0" layoutY="27.0" text="Тулинов А.В. А-13а-19">
+                <font>
+                    <Font name="Verdana" size="34.0" />
+                </font>
+            </Label>
+        </children></AnchorPane>
+
+</AnchorPane>
