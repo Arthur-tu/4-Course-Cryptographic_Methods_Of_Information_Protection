@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="600.0" style="-fx-background-color: #fafafa;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller.MainController">
+
+    <AnchorPane prefHeight="360.0" prefWidth="600.0">
+        <children>
+            <Label fx:id="labelMsg" layoutX="14.0" layoutY="47.0" prefHeight="26.0" prefWidth="162.0" text="Имя пользователя:" textAlignment="RIGHT" textFill="#8a8a8a">
+                <font>
+                    <Font name="Verdana" size="15.0" />
+                </font>
+            </Label>
+            <MenuBar fx:id="menuBarItem" layoutY="-1.0" prefHeight="26.0" prefWidth="600.0">
+                <menus>
+                    <Menu fx:id="menuFileItem" mnemonicParsing="false" text="Файл">
+                        <items>
+                     <MenuItem fx:id="createMenuItem" mnemonicParsing="false" text="Создать">
+                        <accelerator>
+                           <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        </accelerator></MenuItem>
+                     <MenuItem fx:id="loadMenuItem" mnemonicParsing="false" text="Загрузить">
+                        <accelerator>
+                           <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        </accelerator></MenuItem>
+                     <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Сохранить">
+                        <accelerator>
+                           <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        </accelerator></MenuItem>
+                     <SeparatorMenuItem mnemonicParsing="false" />
+                            <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" text="Выход">
+                        <accelerator>
+                           <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        </accelerator></MenuItem>
+                     <SeparatorMenuItem mnemonicParsing="false" />
+                     <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="О программе" />
+                        </items>
+                    </Menu>
+                    <Menu fx:id="menuKeyManagerItem" mnemonicParsing="false" text="Управление ключами">
+                        <items>
+                            <MenuItem fx:id="exportOpenKeyItem" mnemonicParsing="false" text="Экспорт открытого ключа" />
+                     <MenuItem fx:id="importOpenKeyItem" mnemonicParsing="false" text="Импорт открытого ключа" />
+                     <MenuItem fx:id="deleteKetPairItem" mnemonicParsing="false" text="Удаление пары ключей" />
+                     <MenuItem fx:id="chooseCloseKeyItem" mnemonicParsing="false" text="Выбор закрытого ключа" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+          <TextField fx:id="nameField" layoutX="14.0" layoutY="76.0" prefHeight="34.0" prefWidth="207.0" style="-fx-background-color: #fafafa; -fx-border-radius: 5; -fx-border-color: silver;">
+              <font>
+                  <Font size="15.0" />
+              </font>
+          </TextField>
+         <Button fx:id="chooseUserButton" layoutX="227.0" layoutY="47.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" style="-fx-background-color: #9966CC;" text="Выбрать пользователя" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <font>
+               <Font size="15.0" />
+            </font>
+         </Button>
+         <Button fx:id="loadDocButton" layoutX="349.0" layoutY="47.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" style="-fx-background-color: #9966CC;" text="Загрузить документ" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <font>
+               <Font size="15.0" />
+            </font>
+         </Button>
+         <Button fx:id="saveDocButton" layoutX="471.0" layoutY="47.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" style="-fx-background-color: #9966CC;" text="Сохранить документ" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <font>
+               <Font size="15.0" />
+            </font>
+         </Button>
+         <TextArea fx:id="textAria" layoutX="14.0" layoutY="122.0" prefHeight="226.0" prefWidth="573.0" wrapText="true">
+            <font>
+               <Font size="15.0" />
+            </font>
+         </TextArea>
+        </children></AnchorPane>
+
+</AnchorPane>
