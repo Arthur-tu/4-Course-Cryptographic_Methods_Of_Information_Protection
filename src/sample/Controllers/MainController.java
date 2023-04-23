@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -15,11 +16,14 @@ import sample.User;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.*;
 
 public class MainController {
     private static User currentUser;
     private static Dto dto;
+
     @FXML
     private MenuItem createMenuItem;
     @FXML
@@ -101,7 +105,7 @@ public class MainController {
         nameField.clear();
     }
 
-    private void saveDoc()  {
+    private void saveDoc() {
         if (currentUser != null && !currentUser.getUserName().isEmpty()) {
             String docText = textAria.getText();
             String path = choiceDir();
@@ -133,31 +137,44 @@ public class MainController {
             File path = loadImportKeyDir();
             if (path != null) {
                 try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(path))) {
+                    System.out.println(path);
                     int ulen = dataInputStream.readInt();
                     int blob_len = dataInputStream.readInt();
                     String uname = dataInputStream.readUTF();
                     byte[] openkey = dataInputStream.readNBytes(blob_len);
+                    System.out.println("imported open key(doc) " + Arrays.toString(openkey));
                     Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
                     X509EncodedKeySpec x509Spec = new X509EncodedKeySpec(openkey);
-                    KeyFactory keyFact = KeyFactory.getInstance(User.algo, "BC");
+                    KeyFactory keyFact = KeyFactory.getInstance("RSA", "BC");
                     PublicKey pubKey = keyFact.generatePublic(x509Spec);
                     currentUser.setImportedPublicKey(pubKey);
+
                     byte[] sign = getSignSHA512withRSA(openkey);
+                    System.out.println("с чем сравнивать " + Arrays.toString(sign));
+
                     dto = new Dto(ulen, blob_len, uname, openkey, sign);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                /**
-                 * Сохранение подписанного открытого ключа
-                 */
+                // Сохраним подписанный открытый ключ
                 if (path.delete()) {
+                    System.out.println("Файл удален");
                     try (FileOutputStream fos = new FileOutputStream(path.getPath());
                          DataOutputStream dataOutputStream = new DataOutputStream(fos)) {
                         dataOutputStream.writeInt(dto.getUlen());
+                        System.out.println("new ulen " + dto.getUlen());
+
                         dataOutputStream.writeInt(dto.getBlob_len());
+                        System.out.println("new blob_len " + dto.getBlob_len());
+
                         dataOutputStream.writeUTF(dto.getUname());
+                        System.out.println("new uname " + dto.getUname());
+
                         dataOutputStream.write(dto.getOpenkey());
+                        System.out.println("writed open key " + Arrays.toString(dto.getOpenkey()));
+
                         dataOutputStream.write(dto.getSign());
+                        System.out.println("writed sign " + Arrays.toString(dto.getSign()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -178,13 +195,15 @@ public class MainController {
             File file2 = new File("src/PK/" + currentUser.getUserName() + ".pub");
             try (FileOutputStream fos2 = new FileOutputStream(file2.getPath());
                  DataOutputStream dataOutputStream2 = new DataOutputStream(fos2)) {
-                 dataOutputStream2.writeInt(currentUser.getUserName().length());
-                 dataOutputStream2.writeInt(currentUser.getPublicKey().getEncoded().length);
-                 dataOutputStream2.writeUTF(currentUser.getUserName());
-                 dataOutputStream2.write(currentUser.getPublicKey().getEncoded());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                dataOutputStream2.writeInt(currentUser.getUserName().length());
+                dataOutputStream2.writeInt(currentUser.getPublicKey().getEncoded().length);
+                dataOutputStream2.writeUTF(currentUser.getUserName());
+                dataOutputStream2.write(currentUser.getPublicKey().getEncoded());
+                System.out.println("exported open key " + Arrays.toString(currentUser.getPublicKey().getEncoded()));
+                System.out.println("exported open key " + currentUser.getPublicKey());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             makeAlert(Alert.AlertType.INFORMATION, "Открытый ключ экспортирован", "Успех!");
         } else {
             nameField.setText("Пользователь не задан!");
@@ -199,10 +218,18 @@ public class MainController {
             if (path != null) {
                 try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(path))) {
                     int userNameLength = dataInputStream.readInt();
+                    System.out.println("userNameLength " + userNameLength);
+
                     int signLength = dataInputStream.readInt();
+                    System.out.println("signLength " + signLength);
+
                     String userName = dataInputStream.readUTF();
+                    System.out.println("username " + userName);
+
                     byte[] sign = dataInputStream.readNBytes(signLength);
+                    System.out.println("doc sign " + Arrays.toString(sign));
                     String newdocText = dataInputStream.readUTF();
+                    System.out.println("docText " + newdocText);
                     /**
                      * Проверка на существование экспортированного ключа
                      */
@@ -211,13 +238,25 @@ public class MainController {
                          * Считываем открытый ключ
                          */
                         File file = new File("src/PK/" + userName + ".pub");
+                        System.out.println("public path " + file.getPath());
+                        System.out.println("Загружаем подписанный открытый ключ");
                         try (DataInputStream dataInputStream1 =
                                      new DataInputStream(new FileInputStream(file.getPath()))) {
                             int openKeyUserNameLen = dataInputStream1.readInt();
+                            System.out.println(openKeyUserNameLen);
+
                             int openKeyLen = dataInputStream1.readInt();
+                            System.out.println(openKeyLen);
+
                             String openKeyUserName = dataInputStream1.readUTF();
+                            System.out.println(openKeyUserName);
+
                             byte[] openKeyBlob = dataInputStream1.readNBytes(openKeyLen);
+                            System.out.println("openKeyBlob " + Arrays.toString(openKeyBlob));
+
                             byte[] openKeySign = dataInputStream1.readAllBytes();
+                            System.out.println("openKeySign " + Arrays.toString(openKeySign));
+
                             /**
                              * Проверка подписи под открытым ключом
                              */
@@ -225,24 +264,12 @@ public class MainController {
                                 Signature signature = Signature.getInstance("SHA512withRSA");
                                 signature.initVerify(currentUser.getPublicKey());
                                 signature.update(openKeyBlob);
-                                boolean verified = signature.verify(openKeySign);
-                                if (verified) {
+                                boolean isgood = signature.verify(openKeySign);
+                                if (isgood) {
+                                    // Проверка подписи автора под документом:
                                     System.out.println("Ура");
-                                    /**
-                                     * Проверка подписи автора под документом
-                                     */
-//                                    Signature signature2 = Signature.getInstance("MD5withRSA");
-//                                    signature2.initVerify((PublicKey) currentUser.getImportedPublicKey());
-//                                    signature2.update(newdocText.getBytes(StandardCharsets.UTF_8));
-//                                    boolean verified2 = signature.verify(sign);
-//                                    if (verified2) {
-//                                        textAria.clear();
-//                                        textAria.appendText(newdocText);
-//                                        Main.stage.setTitle("Подписанный документ " + currentUser.getUserName());
-//                                    } else {
-//                                        makeAlert(Alert.AlertType.ERROR, "Проверка подписи автора под " +
-//                                                "документом не пройдена!", "Упс!");
-//                                    }
+
+
                                 } else {
                                     makeAlert(Alert.AlertType.ERROR, "Проверка подписи пользователя под открытым " +
                                             "ключом не пройдена!", "Упс!");
@@ -266,6 +293,7 @@ public class MainController {
                                 } else {
                                     makeAlert(Alert.AlertType.ERROR, "Проверка подписи автора под " +
                                             "документом не пройдена!", "Упс!");
+
                                 }
                             } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
                                 e.printStackTrace();
@@ -307,6 +335,7 @@ public class MainController {
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.setTitle("Выберите папку для установки");
         File dir = fileChooser.showSaveDialog(Main.stage);
+
         if (dir != null) {
             return dir.getAbsolutePath();
         } else {
@@ -333,11 +362,11 @@ public class MainController {
     }
 
     private byte[] getSignMD5withRSA(String docText) throws NoSuchAlgorithmException, InvalidKeyException,
-            SignatureException {
-          Signature signature = Signature.getInstance("MD5withRSA");
-          signature.initSign(currentUser.getPrivateKey());
-          signature.update(docText.getBytes(StandardCharsets.UTF_8));
-          return signature.sign();
+            SignatureException{
+        Signature signature = Signature.getInstance("MD5withRSA");
+        signature.initSign(currentUser.getPrivateKey());
+        signature.update(docText.getBytes(StandardCharsets.UTF_8));
+        return signature.sign();
     }
 
     private byte[] getSignSHA512withRSA(byte[] openkey) throws NoSuchAlgorithmException, InvalidKeyException,
@@ -355,18 +384,17 @@ public class MainController {
         if (!userName.isEmpty()) {
             currentUser = new User(userName);
             nameField.setDisable(true);
-            /**
-             * Генерация пары ключей для документа
-             */
+            // генерация открытого и закрытого ключей для документа
             Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
             try {
-                KeyPairGenerator generator = KeyPairGenerator.getInstance(User.algo, "BC");
+                KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "BC");
                 generator.initialize(User.lenSign, new SecureRandom());
                 KeyPair keyPair = generator.generateKeyPair();
                 PublicKey publicKey = keyPair.getPublic();
                 PrivateKey privateKey = keyPair.getPrivate();
                 currentUser.setPublicKey(publicKey);
                 currentUser.setPrivateKey(privateKey);
+                System.out.println("doc " + publicKey);   System.out.println("doc " + privateKey);
             } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
                 e.printStackTrace();
             }

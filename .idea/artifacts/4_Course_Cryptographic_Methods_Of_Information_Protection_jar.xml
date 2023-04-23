@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="4-Course-Cryptographic_Methods_Of_Information_Protection:jar">
+    <output-path>$PROJECT_DIR$</output-path>
+    <root id="archive" name="4-Course-Cryptographic_Methods_Of_Information_Protection.jar">
+      <element id="module-output" name="4-Course-Cryptographic_Methods_Of_Information_Protection" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/javaLibs/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib/javafx-swt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/javaLibs/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib/javafx.web.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/javaLibs/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib/javafx.base.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/javaLibs/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib/javafx.fxml.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/javaLibs/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib/javafx.media.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/javaLibs/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib/javafx.swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/javaLibs/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib/javafx.controls.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/javaLibs/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib/javafx.graphics.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/javaLibs/bcprov-jdk15on-1.57.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
